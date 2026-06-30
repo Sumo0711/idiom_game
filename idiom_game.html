@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idiom Game</title>
+    <style>
+        :root {
+            --board-bg: #d4ebd0; 
+            --card-bg: #ffffff;
+            --text-dark: #2c3e50;
+        }
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: "Comic Sans MS", "Markdown", "Microsoft JhengHei", sans-serif;
+            background-color: #f2ede4; 
+            margin: 0;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden; 
+            overscroll-behavior-y: none; 
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: 5px;
+            height: 35px;
+        }
+        h1 {
+            color: #b81414;
+            text-shadow: 1px 1px 0px #f1c40f, 2px 2px 0px #2c3e50;
+            font-size: 24px;
+            margin: 0;
+            letter-spacing: 2px;
+        }
+
+        #setupScreen {
+            background: white;
+            border: 6px double #2c3e50;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .setup-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        #teamCountInput {
+            font-size: 30px;
+            font-weight: bold;
+            text-align: center;
+            width: 100px;
+            padding: 5px;
+            border: 4px solid #34495e;
+            border-radius: 12px;
+            color: #b81414;
+            outline: none;
+        }
+        .input-group span {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .file-upload-group {
+            display: none;
+            background: #fdf2f2;
+            border: 2px dashed #e74c3c;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .file-upload-group p {
+            margin: 0 0 8px 0;
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 13px;
+        }
+        #jsonFileInput {
+            font-size: 14px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .start-btn {
+            background-color: #ffcc00;
+            color: #b81414;
+            border: 4px solid #b81414;
+            padding: 12px 40px;
+            font-size: 20px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #901010;
+        }
+        .start-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #901010; }
+
+        /* === 遊戲主畫面：讓寬度大幅提升 === */
+        #gameScreen {
+            display: none;
+            width: 100%;
+            /* 讓最大寬度可以吃到 150vh，確保在筆電或大螢幕上能盡可能變寬 */
+            max-width: 150vh; 
+            max-height: 84vh;
+        }
+
+        .board-wrapper {
+            width: 100%;
+            height: 100%;
+            background-color: var(--board-bg);
+            border: 5px solid #2c3e50;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.15), 0 5px 15px rgba(0,0,0,0.1);
+            touch-action: manipulation; 
+        }
+
+        /* 核心改動：將網格比例改成 16/9 寬螢幕，強迫格子變寬 */
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 6px;
+            width: 100%;
+            height: 100%;
+            aspect-ratio: 16 / 9; 
+        }
+
+        .tile {
+            background: white;
+            border: 2px solid #2c3e50;
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            overflow: hidden;
+            height: 100%;
+            padding: 2px; /* 增加一點內距讓文字不貼邊 */
+        }
+        .tile:hover { border-color: #f1c40f; }
+        
+        .tile-header {
+            width: 100%;
+            height: 18px;
+            background-color: #34495e;
+            border-bottom: 1px solid #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 6px;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .tile-name {
+            font-size: 13px; /* 格子變寬了，字體可以稍微放大 */
+            font-weight: bold;
+            color: #2c3e50;
+            text-align: center;
+            margin: 2px 0;
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+        }
+
+        .color-group-1 .tile-header { background-color: #8b5a2b; }
+        .color-group-2 .tile-header { background-color: #2980b9; }
+        .color-group-3 .tile-header { background-color: #9b59b6; }
+        .color-group-4 .tile-header { background-color: #e67e22; }
+        .color-group-5 .tile-header { background-color: #e74c3c; }
+        .color-group-6 .tile-header { background-color: #f1c40f; color: #333; }
+        
+        .tile.special-start { background-color: #ebf5fb; }
+        .tile.special-start .tile-header { background-color: #27ae60; }
+        .tile.destiny { background-color: #fdf2f2; }
+        .tile.destiny .tile-header { background-color: #c0392b; }
+        .tile.destiny .tile-name { color: #c0392b; }
+        
+        /* 棋子放置區：容錯率增加，確保 6 顆能橫著放 */
+        .token-container {
+            display: flex;
+            gap: 4px; /* 增加棋子之間的間距 */
+            justify-content: center;
+            flex-wrap: wrap; /* 如果螢幕太小還是會自動換行保護版面 */
+            padding: 3px 2px;
+            min-height: 28px; 
+            width: 100%;
+            background-color: rgba(0,0,0,0.02);
+            border-top: 1px dashed #ddd;
+        }
+
+        .challenge-box {
+            grid-row: 2 / 5;    
+            grid-column: 2 / 7; 
+            justify-self: center; 
+            align-self: center;   
+            width: 90%;          
+            max-width: 550px; /* 配合變寬的地圖，中央卡片也加寬一點 */
+            min-height: 140px;   
+            background: #fffdf4;
+            border: 4px solid #ff9900;
+            border-radius: 12px;
+            padding: 12px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            position: relative;
+            text-align: center;
+        }
+        .challenge-box::before {
+            content: '?';
+            position: absolute;
+            font-size: 90px;
+            color: rgba(255, 153, 0, 0.03);
+            font-weight: bold;
+            right: 15px;
+            bottom: -15px;
+            pointer-events: none;
+        }
+        .challenge-title {
+            font-size: 15px;
+            color: #d35400;
+            font-weight: bold;
+            margin-bottom: 6px;
+            border-bottom: 2px dashed #ff9900;
+            padding-bottom: 3px;
+            width: 100%;
+        }
+        .challenge-text {
+            font-size: 20px; 
+            color: #2c3e50;
+            font-weight: bold;
+            line-height: 1.4;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .challenge-text small {
+            font-size: 14px;
+            color: #7f8c8d;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .center-utils {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            width: 100%;
+            justify-content: center;
+        }
+        .util-btn {
+            background-color: #34495e;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            opacity: 0.8;
+            transition: 0.2s;
+        }
+        .util-btn:hover { opacity: 1; background-color: #2c3e50; transform: translateY(-1px); }
+
+        /* 核心改動：微幅放大棋子，因為格子變寬了 */
+        .token {
+            width: 22px; 
+            height: 22px;
+            border-radius: 50%;
+            border: 1px dashed rgba(255,255,255,0.6);
+            box-shadow: 0 2px 3px rgba(0,0,0,0.3), inset 0 -1px 3px rgba(0,0,0,0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+            user-select: none;
+            transition: 0.2s;
+        }
+        .token.selected-token {
+            transform: scale(1.3) translateY(-3px);
+            box-shadow: 0 0 0 2px #f1c40f, 0 5px 8px rgba(0,0,0,0.5) !important;
+            z-index: 10;
+        }
+        .token-red { background: radial-gradient(circle at 35% 35%, #ff6b6b, #c0392b); }
+        .token-blue { background: radial-gradient(circle at 35% 35%, #5dade2, #2980b9); }
+        .token-green { background: radial-gradient(circle at 35% 35%, #58d68d, #27ae60); }
+        .token-orange { background: radial-gradient(circle at 35% 35%, #f5b041, #d35400); }
+        .token-purple { background: radial-gradient(circle at 35% 35%, #af7ac5, #7d3c98); }
+        .token-yellow { background: radial-gradient(circle at 35% 35%, #f4d03f, #b7950b); color: #2c3e50; border-color: rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+
+    <div class="header-section">
+        <h1>Idiom Game</h1>
+    </div>
+
+    <div id="setupScreen">
+        <div class="setup-title">🎲 請問今天有幾支隊伍要參賽？</div>
+        <div class="input-group">
+            <input type="number" id="teamCountInput" min="1" max="6" value="6">
+            <span>隊</span>
+        </div>
+        
+        <div class="file-upload-group" id="fileGroup">
+            <p>💡 偵測到瀏覽器本機安全性保護：</p>
+            <label style="font-size:12px; color:#666; display:block; margin-bottom:5px;">請點擊選取同資料夾底下的 mapData.json：</label>
+            <input type="file" id="jsonFileInput" accept=".json">
+        </div>
+
+        <button class="start-btn" onclick="handleStartBtnClick()">生成環狀大富翁 🚀</button>
+    </div>
+
+    <div id="gameScreen">
+        <div class="board-wrapper">
+            <div class="board-grid" id="board">
+                
+                <div class="challenge-box" id="challengeBox">
+                    <div class="challenge-title" id="challengeTitle">CHANCE & DESTINY</div>
+                    <div class="challenge-text" id="challengeText">
+                        大富翁準備就緒！<br>
+                        <span style="color:#d35400; font-size: 16px;">💡 玩法：先點一下棋子，再點目標格子！</span>
+                    </div>
+                    <div class="center-utils">
+                        <button class="util-btn" onclick="backToSetup()">⚙️ 重新設定隊伍</button>
+                        <button class="util-btn" style="background-color: #c0392b; color: white;" onclick="shuffleAndResetGame()">🔄 重新洗牌並回起點</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let mapData = [];
+
+        const gridPositions = [
+            { r: "1", c: "1" }, { r: "1", c: "2" }, { r: "1", c: "3" }, { r: "1", c: "4" }, { r: "1", c: "5" }, { r: "1", c: "6" }, { r: "1", c: "7" }, 
+            { r: "2", c: "7" }, { r: "3", c: "7" }, { r: "4", c: "7" },                                                       
+            { r: "5", c: "7" }, { r: "5", c: "6" }, { r: "5", c: "5" }, { r: "5", c: "4" }, { r: "5", c: "3" }, { r: "5", c: "2" }, { r: "5", c: "1" }, 
+            { r: "4", c: "1" }, { r: "3", c: "1" }, { r: "2", c: "1" }                                                        
+        ];
+
+        const allTeams = ['紅隊', '藍隊', '綠隊', '橘隊', '紫隊', '黃隊'];
+        let activeTeams = []; 
+        let teamPositions = { '紅隊': 0, '藍隊': 0, '綠隊': 0, '橘隊': 0, '紫隊': 0, '黃隊': 0 };
+        let selectedTeamToMove = null;
+
+        const teamClasses = { '紅隊': 'token-red', '藍隊': 'token-blue', '綠隊': 'token-green', '橘隊': 'token-orange', '紫隊': 'token-purple', '黃隊': 'token-yellow' };
+        const teamShortNames = { '紅隊': '紅', '藍隊': '藍', '綠隊': '綠', '橘隊': '橘', '紫隊': '紫', '黃隊': '黃' };
+
+        async function tryAutoLoadJSON() {
+            try {
+                const response = await fetch('mapData.json');
+                if (!response.ok) throw new Error();
+                mapData = await response.json();
+            } catch (err) {
+                document.getElementById('fileGroup').style.display = 'block';
+            }
+        }
+
+        function handleStartBtnClick() {
+            const countInput = document.getElementById('teamCountInput').value;
+            const count = parseInt(countInput, 10);
+
+            if (isNaN(count) || count < 1 || count > 6) {
+                alert("🚨 請輸入 1 到 6 之間的數字！");
+                return;
+            }
+
+            activeTeams = allTeams.slice(0, count);
+
+            if (mapData.length > 0) {
+                executeStartGame();
+            } else {
+                const fileInput = document.getElementById('jsonFileInput');
+                if (fileInput.files.length > 0) {
+                    const file = fileInput.files[0];
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            mapData = JSON.parse(e.target.result);
+                            executeStartGame();
+                        } catch (parseErr) {
+                            alert("🚨 JSON 檔案內容格式錯誤！");
+                        }
+                    };
+                    reader.readAsText(file);
+                } else {
+                    alert("🚨 請先選擇 mapData.json 檔案！");
+                }
+            }
+        }
+
+        function executeStartGame() {
+            allTeams.forEach(team => { teamPositions[team] = 0; });
+            document.getElementById('setupScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            selectedTeamToMove = null;
+            renderBoard();
+            updateTokens();
+        }
+
+        function renderBoard() {
+            const board = document.getElementById('board');
+            const tiles = board.querySelectorAll('.tile');
+            tiles.forEach(t => t.remove());
+            
+            mapData.forEach((tile, index) => {
+                const tileDiv = document.createElement('div');
+                tileDiv.className = `tile ${tile.type} ${tile.group}`;
+                tileDiv.id = `tile-${index}`;
+                tileDiv.style.gridRow = gridPositions[index].r;
+                tileDiv.style.gridColumn = gridPositions[index].c;
+
+                tileDiv.setAttribute('ondragover', 'allowDrop(event)');
+                tileDiv.setAttribute('ondragenter', 'dragEnter(event)');
+                tileDiv.setAttribute('ondragleave', 'dragLeave(event)');
+                tileDiv.setAttribute('ondrop', `handleDrop(event, ${index})`);
+
+                tileDiv.onclick = (e) => {
+                    if(e.target.classList.contains('token')) return;
+                    if (selectedTeamToMove) {
+                        teamPositions[selectedTeamToMove] = index; 
+                        let movedTeam = selectedTeamToMove;
+                        selectedTeamToMove = null; 
+                        updateTokens();
+                        showChallenge(index, movedTeam);
+                    }
+                };
+
+                tileDiv.innerHTML = `
+                    <div class="tile-header">
+                        <span class="tile-num">${tile.num}</span>
+                        <span>PROP</span>
+                    </div>
+                    <div class="tile-name">${tile.name}</div>
+                    <div class="token-container" id="tokens-${index}"></div>
+                `;
+                board.appendChild(tileDiv);
+            });
+        }
+
+        function backToSetup() {
+            if (confirm("重新設定會清空目前的進度，確定要回去嗎？")) {
+                document.getElementById('setupScreen').style.display = 'block';
+                document.getElementById('gameScreen').style.display = 'none';
+                tryAutoLoadJSON();
+            }
+        }
+
+        function shuffleAndResetGame() {
+            if (confirm("確定要將所有隊伍重設回起點，並且「重新洗牌」關卡嗎？")) {
+                
+                activeTeams.forEach(team => { teamPositions[team] = 0; });
+                selectedTeamToMove = null;
+
+                let startTile = mapData[0];
+                let tilesToShuffle = mapData.slice(1);
+                
+                let isValid = false;
+                let maxRetries = 1000; 
+
+                while (!isValid && maxRetries > 0) {
+                    for (let i = tilesToShuffle.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [tilesToShuffle[i], tilesToShuffle[j]] = [tilesToShuffle[j], tilesToShuffle[i]];
+                    }
+
+                    isValid = true;
+                    for (let i = 0; i < tilesToShuffle.length - 1; i++) {
+                        if (tilesToShuffle[i].group === tilesToShuffle[i + 1].group) {
+                            isValid = false;
+                            break;
+                        }
+                    }
+                    maxRetries--;
+                }
+
+                tilesToShuffle.forEach((tile, idx) => {
+                    tile.num = (idx + 1).toString().padStart(2, '0');
+                });
+
+                mapData = [startTile, ...tilesToShuffle];
+
+                renderBoard();
+                updateTokens();
+                
+                const box = document.getElementById('challengeBox');
+                document.getElementById('challengeTitle').innerText = "CHANCE & DESTINY";
+                document.getElementById('challengeText').innerHTML = "大富翁已重新洗牌！<br><span style='color:#d35400; font-size: 16px;'>💡 玩法：先點一下棋子，再點目標格子！</span>";
+                box.style.background = '#fffdf4';
+                box.style.borderColor = '#ff9900';
+            }
+        }
+
+        function handleDragStart(ev, teamName) {
+            ev.dataTransfer.effectAllowed = "move";
+            ev.dataTransfer.setData("text/plain", teamName); 
+            selectedTeamToMove = teamName; 
+            updateTokens();
+        }
+        function allowDrop(ev) { ev.preventDefault(); }
+        function dragEnter(ev) { ev.preventDefault(); ev.currentTarget.classList.add('drag-over'); }
+        function dragLeave(ev) { ev.currentTarget.classList.remove('drag-over'); }
+        function handleDrop(ev, targetIndex) {
+            ev.preventDefault();
+            ev.currentTarget.classList.remove('drag-over');
+            const draggedTeam = ev.dataTransfer.getData("text/plain");
+            if (draggedTeam && activeTeams.includes(draggedTeam)) {
+                teamPositions[draggedTeam] = targetIndex;
+                selectedTeamToMove = null; 
+                updateTokens();
+                showChallenge(targetIndex, draggedTeam); 
+            }
+        }
+
+        function updateTokens() {
+            mapData.forEach((_, index) => {
+                const container = document.getElementById(`tokens-${index}`);
+                if(container) container.innerHTML = '';
+            });
+
+            activeTeams.forEach(team => {
+                let position = teamPositions[team];
+                let container = document.getElementById(`tokens-${position}`);
+                if (container) {
+                    let token = document.createElement('div');
+                    token.className = `token ${teamClasses[team]}`;
+                    
+                    if (selectedTeamToMove === team) {
+                        token.classList.add('selected-token');
+                    }
+
+                    token.innerText = teamShortNames[team];
+                    token.setAttribute('draggable', 'true');
+                    token.setAttribute('ondragstart', `handleDragStart(event, '${team}')`);
+                    
+                    token.onclick = (e) => {
+                        e.stopPropagation(); 
+                        if (selectedTeamToMove === team) {
+                            selectedTeamToMove = null;
+                        } else {
+                            selectedTeamToMove = team;
+                        }
+                        updateTokens(); 
+                    };
+
+                    container.appendChild(token);
+                }
+            });
+        }
+
+        function showChallenge(index, teamName) {
+            const tile = mapData[index];
+            const box = document.getElementById('challengeBox');
+            const title = document.getElementById('challengeTitle');
+            const text = document.getElementById('challengeText');
+
+            title.innerText = `【 ${teamName} 】 踩到了 第 ${tile.num} 格：${tile.name}`;
+            text.innerHTML = tile.desc;
+
+            if (tile.type === 'destiny') {
+                box.style.background = '#fffafb';
+                box.style.borderColor = '#e74c3c';
+                title.style.color = '#c0392b';
+            } else if (index === 0) {
+                box.style.background = '#fffdf4';
+                box.style.borderColor = '#ff9900';
+                title.style.color = '#d35400';
+            } else {
+                box.style.background = '#f4faff';
+                box.style.borderColor = '#3498db';
+                title.style.color = '#2980b9';
+            }
+        }
+
+        tryAutoLoadJSON();
+    </script>
+</body>
+</html>

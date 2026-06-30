@@ -1,0 +1,22 @@
+[
+    {"num": "START", "name": "起點出發", "type": "special-start", "desc": "請擲實體骰子開始遊玩！", "group": ""},
+    {"num": "01", "name": "無敵星星", "type": "destiny", "desc": "⭐【命運卡】超級無敵星星：再擲一次實體骰子！", "group": ""},
+    {"num": "02", "name": "身體部位", "type": "normal", "desc": "摸摸自己的頭，說一個有「身體部位」的成語！", "group": "color-group-2"},
+    {"num": "03", "name": "團隊擊掌", "type": "normal", "desc": "全組互相擊掌，並說一個成語！", "group": "color-group-6"},
+    {"num": "04", "name": "動物成語", "type": "normal", "desc": "學動物叫三聲，並說一個有「動物」的成語！", "group": "color-group-1"},
+    {"num": "05", "name": "踩到水坑", "type": "destiny", "desc": "💦【命運卡】踩到水坑：哎呀！退後 1 格！", "group": ""},
+    {"num": "06", "name": "比手畫腳", "type": "normal", "desc": "隊友比手畫腳，台上的人要猜出一個成語！", "group": "color-group-3"},
+    {"num": "07", "name": "生氣表情", "type": "normal", "desc": "全組做出「生氣」的表情，並說一個成語！", "group": "color-group-4"},
+    {"num": "08", "name": "數字成語", "type": "normal", "desc": "說出一個有「數字」的成語！", "group": "color-group-1"},
+    {"num": "09", "name": "大自然", "type": "normal", "desc": "說出一個跟「大自然」有關的成語！", "group": "color-group-5"},
+    {"num": "10", "name": "噴射機", "type": "destiny", "desc": "🚀【命運卡】搭乘噴射機：開心前進 2 格！", "group": ""},
+    {"num": "11", "name": "輪流接力", "type": "normal", "desc": "全組輪流接力：一人說一個字，拼成一個成語！", "group": "color-group-6"},
+    {"num": "12", "name": "與老師猜拳", "type": "normal", "desc": "跟關主猜拳，贏了才能前進！", "group": "color-group-2"},
+    {"num": "13", "name": "單腳站立", "type": "normal", "desc": "全組單腳站立，並說出一個成語！", "group": "color-group-4"},
+    {"num": "14", "name": "遇到紅燈", "type": "destiny", "desc": "🛑【命運卡】遇到紅燈：暫停一次！", "group": ""},
+    {"num": "15", "name": "牽手跳跳", "type": "normal", "desc": "全組手牽手跳三下，大喊一個成語！", "group": "color-group-5"},
+    {"num": "16", "name": "大笑三聲", "type": "normal", "desc": "全組一起大笑三聲，並說一個成語！", "group": "color-group-1"},
+    {"num": "17", "name": "顏色成語", "type": "normal", "desc": "說出一個有「顏色」的成語！", "group": "color-group-3"},
+    {"num": "18", "name": "搭高鐵", "type": "destiny", "desc": "🚄【命運卡】搭乘高鐵：前進 1 格！", "group": ""},
+    {"num": "19", "name": "天地成語", "type": "normal", "desc": "說出一個有「天」或「地」的成語！", "group": "color-group-4"}
+]
