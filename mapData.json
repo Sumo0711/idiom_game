@@ -18,5 +18,5 @@
     {"num": "16", "name": "大笑三聲", "type": "normal", "desc": "全組一起大笑三聲，並說一個成語！", "group": "color-group-1"},
     {"num": "17", "name": "顏色成語", "type": "normal", "desc": "說出一個有「顏色」的成語！", "group": "color-group-3"},
     {"num": "18", "name": "搭高鐵", "type": "destiny", "desc": "🚄【命運卡】搭乘高鐵：前進 1 格！", "group": ""},
-    {"num": "19", "name": "天地成語", "type": "normal", "desc": "說出一個有「天」或「地」的成語！", "group": "color-group-4"}
+    {"num": "19", "name": "時間成語", "type": "normal", "desc": "說出一個有關「時間」的成語！", "group": "color-group-4"}
 ]
