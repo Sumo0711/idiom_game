@@ -1,22 +1,149 @@
 [
     {"num": "START", "name": "起點出發", "type": "special-start", "desc": "請擲實體骰子開始遊玩！", "group": ""},
     {"num": "01", "name": "無敵星星", "type": "destiny", "desc": "⭐【命運卡】超級無敵星星：再擲一次實體骰子！", "group": ""},
-    {"num": "02", "name": "身體部位", "type": "normal", "desc": "摸摸自己的頭，說一個有「身體部位」的成語！", "group": "color-group-2"},
-    {"num": "03", "name": "團隊擊掌", "type": "normal", "desc": "全組互相擊掌，並說一個成語！", "group": "color-group-6"},
-    {"num": "04", "name": "動物成語", "type": "normal", "desc": "學動物叫三聲，並說一個有「動物」的成語！", "group": "color-group-1"},
+    {"num": "02", "name": "身體部位成語", "type": "normal", "desc": "說出一個有「身體部位」的成語！", "group": "color-group-2", "pool": [
+        "說一個有「頭」的成語！<br><small>例如：搖頭晃腦、頭頭是道</small>",
+        "說一個有「手」的成語！<br><small>例如：手忙腳亂、手舞足蹈</small>",
+        "說一個有「眼」或「目」的成語！<br><small>例如：眼明手快、目瞪口呆</small>",
+        "說一個有「口」或「嘴」的成語！<br><small>例如：口是心非、七嘴八舌</small>",
+        "說一個有「心」的成語！<br><small>例如：一心一意、心花怒放</small>",
+        "說一個有「耳」的成語！<br><small>例如：耳聰目明、交頭接耳</small>",
+        "說一個有「腳」或「足」的成語！<br><small>例如：手舞足蹈、畫蛇添足</small>",
+        "說一個有「面」或「臉」的成語！<br><small>例如：面紅耳赤、笑容滿面</small>",
+        "摸摸自己的頭，再說一個有「身體部位」的成語！",
+        "全組指一指自己的鼻子，說一個有「身體部位」的成語！"
+    ]},
+    {"num": "03", "name": "英文動物", "type": "normal", "desc": "說出動物的英文！", "group": "color-group-6", "pool": [
+        "說出 3 種「動物」的英文！<br><small>例如：dog、cat、bird、fish</small>",
+        "「狗」的英文怎麼說？<br><small>答案：dog 🐶</small>",
+        "「貓」的英文怎麼說？<br><small>答案：cat 🐱</small>",
+        "「魚」的英文怎麼說？<br><small>答案：fish 🐟</small>",
+        "「鳥」的英文怎麼說？<br><small>答案：bird 🐦</small>",
+        "「猴子」的英文怎麼說？<br><small>答案：monkey 🐵</small>",
+        "「大象」的英文怎麼說？<br><small>答案：elephant 🐘</small>",
+        "「獅子」的英文怎麼說？<br><small>答案：lion 🦁</small>",
+        "「兔子」的英文怎麼說？<br><small>答案：rabbit 🐰</small>",
+        "學一種動物的叫聲，全組一起說出牠的英文！"
+    ]},
+    {"num": "04", "name": "動物成語", "type": "normal", "desc": "說出一個有「動物」的成語！", "group": "color-group-1", "pool": [
+        "說一個有「狗」的成語！<br><small>例如：狗急跳牆、雞飛狗跳</small>",
+        "說一個有「貓」或「鼠」的成語！<br><small>例如：貓哭老鼠、膽小如鼠</small>",
+        "說一個有「馬」的成語！<br><small>例如：一馬當先、馬到成功</small>",
+        "說一個有「鳥」的成語！<br><small>例如：驚弓之鳥、笨鳥先飛</small>",
+        "說一個有「魚」的成語！<br><small>例如：如魚得水、渾水摸魚</small>",
+        "說一個有「虎」的成語！<br><small>例如：生龍活虎、狐假虎威</small>",
+        "說一個有「龍」的成語！<br><small>例如：龍飛鳳舞、生龍活虎</small>",
+        "說一個有「牛」或「羊」的成語！<br><small>例如：九牛一毛、亡羊補牢</small>",
+        "說一個有「兔」或「雞」的成語！<br><small>例如：守株待兔、聞雞起舞</small>",
+        "學一種動物叫三聲，再說一個有「動物」的成語！"
+    ]},
     {"num": "05", "name": "踩到水坑", "type": "destiny", "desc": "💦【命運卡】踩到水坑：哎呀！退後 1 格！", "group": ""},
-    {"num": "06", "name": "比手畫腳", "type": "normal", "desc": "隊友比手畫腳，台上的人要猜出一個成語！", "group": "color-group-3"},
-    {"num": "07", "name": "生氣表情", "type": "normal", "desc": "全組做出「生氣」的表情，並說一個成語！", "group": "color-group-4"},
-    {"num": "08", "name": "數字成語", "type": "normal", "desc": "說出一個有「數字」的成語！", "group": "color-group-1"},
-    {"num": "09", "name": "大自然", "type": "normal", "desc": "說出一個跟「大自然」有關的成語！", "group": "color-group-5"},
+    {"num": "06", "name": "比手畫腳", "type": "normal", "desc": "隊友比手畫腳，台上的人要猜出一個成語！", "group": "color-group-3", "pool": [
+        "隊友比手畫腳，台上的人要猜出一個成語！",
+        "用動作表演一個成語，讓隊友猜！<br><small>例如：手舞足蹈、抓耳撓腮</small>",
+        "用動作表演一種「動物」，讓關主猜是什麼！",
+        "不能出聲，只能比動作，讓隊友猜出一種水果！",
+        "用動作表演一個成語的其中一個字，讓隊友接出整句！"
+    ]},
+    {"num": "07", "name": "英文顏色", "type": "normal", "desc": "說出顏色的英文！", "group": "color-group-4", "pool": [
+        "說出 3 種「顏色」的英文！<br><small>例如：red、blue、green、yellow</small>",
+        "「紅色」的英文怎麼說？<br><small>答案：red ❤️</small>",
+        "「藍色」的英文怎麼說？<br><small>答案：blue 💙</small>",
+        "「綠色」的英文怎麼說？<br><small>答案：green 💚</small>",
+        "「黃色」的英文怎麼說？<br><small>答案：yellow 💛</small>",
+        "「黑色」的英文怎麼說？<br><small>答案：black 🖤</small>",
+        "「白色」的英文怎麼說？<br><small>答案：white 🤍</small>",
+        "「粉紅色」的英文怎麼說？<br><small>答案：pink 💗</small>",
+        "「橘色」的英文怎麼說？<br><small>答案：orange 🧡</small>",
+        "找一個身上的顏色，說出它的英文！"
+    ]},
+    {"num": "08", "name": "數字成語", "type": "normal", "desc": "說出一個有「數字」的成語！", "group": "color-group-1", "pool": [
+        "說一個有「一」的成語！<br><small>例如：一心一意、一鳴驚人</small>",
+        "說一個有「二」或「兩」的成語！<br><small>例如：三心二意、兩全其美</small>",
+        "說一個有「三」的成語！<br><small>例如：三三兩兩、三言兩語</small>",
+        "說一個有「四」的成語！<br><small>例如：四面八方、四通八達</small>",
+        "說一個有「五」的成語！<br><small>例如：五顏六色、五花八門</small>",
+        "說一個有「七」或「八」的成語！<br><small>例如：七上八下、七手八腳</small>",
+        "說一個有「九」或「十」的成語！<br><small>例如：十全十美、九牛一毛</small>",
+        "說一個有「百」或「千」的成語！<br><small>例如：百發百中、千變萬化</small>",
+        "說一個有「萬」的成語！<br><small>例如：萬無一失、包羅萬象</small>",
+        "說一個含有「數字」的成語！<br><small>比一比誰想得最快</small>"
+    ]},
+    {"num": "09", "name": "大自然成語", "type": "normal", "desc": "說出一個跟「大自然」有關的成語！", "group": "color-group-5", "pool": [
+        "說一個有「山」的成語！<br><small>例如：山明水秀、開門見山</small>",
+        "說一個有「水」的成語！<br><small>例如：山明水秀、水到渠成</small>",
+        "說一個有「風」的成語！<br><small>例如：和風細雨、風和日麗</small>",
+        "說一個有「雨」的成語！<br><small>例如：和風細雨、風調雨順</small>",
+        "說一個有「花」的成語！<br><small>例如：花好月圓、百花齊放</small>",
+        "說一個有「天」的成語！<br><small>例如：天長地久、海闊天空</small>",
+        "說一個有「日」或「月」的成語！<br><small>例如：花好月圓、日新月異</small>",
+        "說一個有「雲」或「雪」的成語！<br><small>例如：騰雲駕霧、冰天雪地</small>",
+        "說一個跟「大自然」有關的成語！"
+    ]},
     {"num": "10", "name": "噴射機", "type": "destiny", "desc": "🚀【命運卡】搭乘噴射機：開心前進 2 格！", "group": ""},
-    {"num": "11", "name": "輪流接力", "type": "normal", "desc": "全組輪流接力：一人說一個字，拼成一個成語！", "group": "color-group-6"},
-    {"num": "12", "name": "與老師猜拳", "type": "normal", "desc": "跟關主猜拳，贏了才能前進！", "group": "color-group-2"},
-    {"num": "13", "name": "單腳站立", "type": "normal", "desc": "全組單腳站立，並說出一個成語！", "group": "color-group-4"},
+    {"num": "11", "name": "英文數字", "type": "normal", "desc": "用英文說數字！", "group": "color-group-6", "pool": [
+        "從 1 數到 10 的英文！<br><small>one, two, three … ten</small>",
+        "「3」的英文怎麼說？<br><small>答案：three</small>",
+        "「5」的英文怎麼說？<br><small>答案：five ✋</small>",
+        "「7」的英文怎麼說？<br><small>答案：seven</small>",
+        "「8」的英文怎麼說？<br><small>答案：eight</small>",
+        "「10」的英文怎麼說？<br><small>答案：ten 🙌</small>",
+        "「0」的英文怎麼說？<br><small>答案：zero</small>",
+        "用英文說出你這一組有幾個人！<br><small>例如：four！</small>",
+        "比出一個數字，全組用英文一起喊出來！"
+    ]},
+    {"num": "12", "name": "英文水果", "type": "normal", "desc": "說出水果或食物的英文！", "group": "color-group-2", "pool": [
+        "說出 3 種「水果」的英文！<br><small>例如：apple、banana、orange</small>",
+        "「蘋果」的英文怎麼說？<br><small>答案：apple 🍎</small>",
+        "「香蕉」的英文怎麼說？<br><small>答案：banana 🍌</small>",
+        "「柳橙」的英文怎麼說？<br><small>答案：orange 🍊</small>",
+        "「葡萄」的英文怎麼說？<br><small>答案：grape 🍇</small>",
+        "「西瓜」的英文怎麼說？<br><small>答案：watermelon 🍉</small>",
+        "「草莓」的英文怎麼說？<br><small>答案：strawberry 🍓</small>",
+        "「水」的英文怎麼說？<br><small>答案：water 💧</small>",
+        "說出一種你最愛吃的食物的英文！"
+    ]},
+    {"num": "13", "name": "單腳站立", "type": "normal", "desc": "全組單腳站立，並說出一個成語！", "group": "color-group-4", "pool": [
+        "全組單腳站立 5 秒，並說出一個成語！",
+        "全組單腳站立，說出一個有「數字」的成語！",
+        "全組單腳站立，說出一種動物的英文！",
+        "全組單腳站立比平衡，撐最久的加油！同時說一個成語！"
+    ]},
     {"num": "14", "name": "遇到紅燈", "type": "destiny", "desc": "🛑【命運卡】遇到紅燈：暫停一次！", "group": ""},
-    {"num": "15", "name": "牽手跳跳", "type": "normal", "desc": "全組手牽手跳三下，大喊一個成語！", "group": "color-group-5"},
-    {"num": "16", "name": "大笑三聲", "type": "normal", "desc": "全組一起大笑三聲，並說一個成語！", "group": "color-group-1"},
-    {"num": "17", "name": "顏色成語", "type": "normal", "desc": "說出一個有「顏色」的成語！", "group": "color-group-3"},
+    {"num": "15", "name": "英文日常", "type": "normal", "desc": "用英文說一句生活用語！", "group": "color-group-5", "pool": [
+        "用英文跟關主打招呼！<br><small>例如：Hello! / Good morning!</small>",
+        "用英文說「謝謝」！<br><small>答案：Thank you! 🙏</small>",
+        "用英文說「再見」！<br><small>答案：Goodbye! / Bye bye! 👋</small>",
+        "用英文說「對不起」！<br><small>答案：Sorry!</small>",
+        "用英文介紹自己：My name is ___.<br><small>換一個人說說看</small>",
+        "用英文說「我很好」！<br><small>答案：I'm fine! / I'm good!</small>",
+        "用英文說出今天星期幾！<br><small>例如：Monday、Friday</small>",
+        "用英文說「我喜歡…」！<br><small>例如：I like apples.</small>"
+    ]},
+    {"num": "16", "name": "大笑三聲", "type": "normal", "desc": "全組一起大笑三聲，並說一個成語！", "group": "color-group-1", "pool": [
+        "全組一起大笑三聲「哈哈哈」，並說一個成語！",
+        "全組一起大笑，說一個讓人開心的成語！<br><small>例如：眉開眼笑、笑容滿面</small>",
+        "全組一起說「Ha ha ha」，再說一個顏色的英文！",
+        "全組比出笑臉，說一個有「口」或「笑」的成語！"
+    ]},
+    {"num": "17", "name": "顏色成語", "type": "normal", "desc": "說出一個有「顏色」的成語！", "group": "color-group-3", "pool": [
+        "說一個有「紅」的成語！<br><small>例如：面紅耳赤、紅光滿面</small>",
+        "說一個有「白」的成語！<br><small>例如：一清二白、白紙黑字</small>",
+        "說一個有「黑」的成語！<br><small>例如：白紙黑字、黑白分明</small>",
+        "說一個有「青」或「綠」的成語！<br><small>例如：青出於藍、青山綠水</small>",
+        "說一個有「黃」或「金」的成語！<br><small>例如：金光閃閃、飛黃騰達</small>",
+        "說一個有「五顏六色」感覺的成語！<br><small>例如：五顏六色、五光十色</small>",
+        "找一個身上「紅色」的東西，並說一個有顏色的成語！",
+        "說一個含有「顏色」的成語！"
+    ]},
     {"num": "18", "name": "搭高鐵", "type": "destiny", "desc": "🚄【命運卡】搭乘高鐵：前進 1 格！", "group": ""},
-    {"num": "19", "name": "時間成語", "type": "normal", "desc": "說出一個有關「時間」的成語！", "group": "color-group-4"}
+    {"num": "19", "name": "時間成語", "type": "normal", "desc": "說出一個有關「時間」的成語！", "group": "color-group-4", "pool": [
+        "說一個有「早」或「晚」的成語！<br><small>例如：起早貪黑</small>",
+        "說一個有「日」的成語！<br><small>例如：日新月異、日積月累</small>",
+        "說一個有「年」的成語！<br><small>例如：年年有餘、度日如年</small>",
+        "說一個有「春夏秋冬」的成語！<br><small>例如：春暖花開、秋高氣爽</small>",
+        "說一個形容「很快」的成語！<br><small>例如：一日千里、光陰似箭</small>",
+        "說一個形容「很久」的成語！<br><small>例如：天長地久、地久天長</small>",
+        "說一個有關「時間」的成語！<br><small>例如：分秒必爭、爭分奪秒</small>"
+    ]}
 ]

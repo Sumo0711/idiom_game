@@ -589,7 +589,13 @@
             const text = document.getElementById('challengeText');
 
             title.innerText = `【 ${teamName} 】 踩到了 第 ${tile.num} 格：${tile.name}`;
-            text.innerHTML = tile.desc;
+
+            // 若這一格有題庫池 (pool)，就隨機抽一題；否則顯示預設說明 (desc)
+            if (Array.isArray(tile.pool) && tile.pool.length > 0) {
+                text.innerHTML = tile.pool[Math.floor(Math.random() * tile.pool.length)];
+            } else {
+                text.innerHTML = tile.desc;
+            }
 
             if (tile.type === 'destiny') {
                 box.style.background = '#fffafb';
