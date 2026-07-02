@@ -157,14 +157,14 @@
         "num": "22",
         "name": "英文水果",
         "type": "english",
-        "desc": "說出 1 種「水果」的英文！",
+        "desc": "說出 3 種「水果」的英文！",
         "group": "color-group-6"
     },
     {
         "num": "23",
         "name": "英文身體部位",
         "type": "english",
-        "desc": "說出 1 個「身體部位」的英文！",
+        "desc": "說出 2 個「身體部位」的英文！",
         "group": "color-group-4"
     },
     {
@@ -178,7 +178,7 @@
         "num": "25",
         "name": "英文交通工具",
         "type": "english",
-        "desc": "說出 1 種「交通工具」的英文！",
+        "desc": "說出 2 種「交通工具」的英文！",
         "group": "color-group-6"
     },
     {
@@ -213,7 +213,7 @@
         "num": "30",
         "name": "食物大會",
         "type": "english",
-        "desc": "說出 1 種你愛吃的「食物」英文！",
+        "desc": "說出 2 種你愛吃的「食物」英文！",
         "group": "color-group-6"
     },
     {
