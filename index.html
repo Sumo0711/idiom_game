@@ -114,11 +114,9 @@
         }
         .start-btn:active { transform: translateY(3px); box-shadow: 0 2px 0 #901010; }
 
-        /* === 遊戲主畫面：讓寬度大幅提升 === */
         #gameScreen {
             display: none;
             width: 100%;
-            /* 讓最大寬度可以吃到 150vh，確保在筆電或大螢幕上能盡可能變寬 */
             max-width: 150vh; 
             max-height: 84vh;
         }
@@ -134,7 +132,6 @@
             touch-action: manipulation; 
         }
 
-        /* 核心改動：將網格比例改成 16/9 寬螢幕，強迫格子變寬 */
         .board-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -156,7 +153,7 @@
             cursor: pointer;
             overflow: hidden;
             height: 100%;
-            padding: 2px; /* 增加一點內距讓文字不貼邊 */
+            padding: 2px;
         }
         .tile:hover { border-color: #f1c40f; }
         
@@ -175,7 +172,7 @@
         }
         
         .tile-name {
-            font-size: 13px; /* 格子變寬了，字體可以稍微放大 */
+            font-size: 13px;
             font-weight: bold;
             color: #2c3e50;
             text-align: center;
@@ -187,25 +184,25 @@
             line-height: 1.2;
         }
 
-        .color-group-1 .tile-header { background-color: #8b5a2b; }
-        .color-group-2 .tile-header { background-color: #2980b9; }
-        .color-group-3 .tile-header { background-color: #9b59b6; }
-        .color-group-4 .tile-header { background-color: #e67e22; }
-        .color-group-5 .tile-header { background-color: #e74c3c; }
-        .color-group-6 .tile-header { background-color: #f1c40f; color: #333; }
-        
-        .tile.special-start { background-color: #ebf5fb; }
+        /* ===== 格子顏色依照 type 分類 ===== */
+        .tile.special-start { background-color: #e8f8f5; }
         .tile.special-start .tile-header { background-color: #27ae60; }
+        
         .tile.destiny { background-color: #fdf2f2; }
         .tile.destiny .tile-header { background-color: #c0392b; }
         .tile.destiny .tile-name { color: #c0392b; }
         
-        /* 棋子放置區：容錯率增加，確保 6 顆能橫著放 */
+        .tile.idiom .tile-header { background-color: #2980b9; }
+        
+        .tile.english .tile-header { background-color: #e67e22; }
+        
+        .tile.challenge .tile-header { background-color: #9b59b6; }
+        
         .token-container {
             display: flex;
-            gap: 4px; /* 增加棋子之間的間距 */
+            gap: 4px; 
             justify-content: center;
-            flex-wrap: wrap; /* 如果螢幕太小還是會自動換行保護版面 */
+            flex-wrap: wrap;
             padding: 3px 2px;
             min-height: 28px; 
             width: 100%;
@@ -219,7 +216,7 @@
             justify-self: center; 
             align-self: center;   
             width: 90%;          
-            max-width: 550px; /* 配合變寬的地圖，中央卡片也加寬一點 */
+            max-width: 550px; 
             min-height: 140px;   
             background: #fffdf4;
             border: 4px solid #ff9900;
@@ -290,7 +287,6 @@
         }
         .util-btn:hover { opacity: 1; background-color: #2c3e50; transform: translateY(-1px); }
 
-        /* 核心改動：微幅放大棋子，因為格子變寬了 */
         .token {
             width: 22px; 
             height: 22px;
@@ -363,7 +359,8 @@
     </div>
 
     <script>
-        let mapData = [];
+        let rawMapData = []; 
+        let mapData = [];    
 
         const gridPositions = [
             { r: "1", c: "1" }, { r: "1", c: "2" }, { r: "1", c: "3" }, { r: "1", c: "4" }, { r: "1", c: "5" }, { r: "1", c: "6" }, { r: "1", c: "7" }, 
@@ -384,7 +381,7 @@
             try {
                 const response = await fetch('mapData.json');
                 if (!response.ok) throw new Error();
-                mapData = await response.json();
+                rawMapData = await response.json();
             } catch (err) {
                 document.getElementById('fileGroup').style.display = 'block';
             }
@@ -401,7 +398,7 @@
 
             activeTeams = allTeams.slice(0, count);
 
-            if (mapData.length > 0) {
+            if (rawMapData.length > 0) {
                 executeStartGame();
             } else {
                 const fileInput = document.getElementById('jsonFileInput');
@@ -410,7 +407,7 @@
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         try {
-                            mapData = JSON.parse(e.target.result);
+                            rawMapData = JSON.parse(e.target.result);
                             executeStartGame();
                         } catch (parseErr) {
                             alert("🚨 JSON 檔案內容格式錯誤！");
@@ -428,8 +425,84 @@
             document.getElementById('setupScreen').style.display = 'none';
             document.getElementById('gameScreen').style.display = 'block';
             selectedTeamToMove = null;
+            
+            generateRandomBoard(); 
+
             renderBoard();
             updateTokens();
+        }
+
+        // ===== 核心改動：依照指定的 type 數量進行精準抽題與大洗牌 =====
+        function generateRandomBoard() {
+            if (!rawMapData || rawMapData.length === 0) return;
+            
+            let startTile = { ...rawMapData[0] }; // 起點固定
+            let pool = rawMapData.slice(1);       // 剩下的作為題庫池
+            
+            // 將題庫依 type 分類
+            let destinyPool = pool.filter(t => t.type === 'destiny');
+            let englishPool = pool.filter(t => t.type === 'english');
+            let idiomPool = pool.filter(t => t.type === 'idiom');
+            let challengePool = pool.filter(t => t.type === 'challenge');
+
+            let isValid = false;
+            let maxRetries = 1000; 
+            let selectedTiles = [];
+
+            // 輔助洗牌函式
+            const shuffleArray = (arr) => {
+                for (let i = arr.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+            };
+
+            while (!isValid && maxRetries > 0) {
+                // 1. 各別大池子先獨立洗牌
+                shuffleArray(destinyPool);
+                shuffleArray(englishPool);
+                shuffleArray(idiomPool);
+                shuffleArray(challengePool);
+
+                // 2. 精準抽取指定的數量 (3, 5, 7, 4)
+                let pickedDestiny = destinyPool.slice(0, 3).map(t => ({ ...t }));
+                let pickedEnglish = englishPool.slice(0, 5).map(t => ({ ...t }));
+                let pickedIdiom = idiomPool.slice(0, 7).map(t => ({ ...t }));
+                let pickedChallenge = challengePool.slice(0, 4).map(t => ({ ...t }));
+
+                // 安全防護：避免 JSON 內的總題目量不夠抽
+                if (pickedDestiny.length < 3 || pickedEnglish.length < 5 || pickedIdiom.length < 7 || pickedChallenge.length < 4) {
+                    alert("🚨 題庫中的各種類題目數量不足以分配指定的數量！");
+                    return;
+                }
+
+                // 3. 合併這 19 個格子，並做最終大洗牌
+                selectedTiles = [
+                    ...pickedDestiny,
+                    ...pickedEnglish,
+                    ...pickedIdiom,
+                    ...pickedChallenge
+                ];
+                shuffleArray(selectedTiles);
+
+                // 4. 防撞檢查：確保相同 type 不會並排在一起
+                isValid = true;
+                for (let i = 0; i < selectedTiles.length - 1; i++) {
+                    if (selectedTiles[i].type === selectedTiles[i + 1].type) {
+                        isValid = false;
+                        break;
+                    }
+                }
+                maxRetries--;
+            }
+
+            // 重新編排顯示序號 01 ~ 19
+            selectedTiles.forEach((tile, idx) => {
+                tile.num = (idx + 1).toString().padStart(2, '0');
+            });
+
+            // 結合成最終地圖 (起點 + 19格)
+            mapData = [startTile, ...selectedTiles];
         }
 
         function renderBoard() {
@@ -439,7 +512,7 @@
             
             mapData.forEach((tile, index) => {
                 const tileDiv = document.createElement('div');
-                tileDiv.className = `tile ${tile.type} ${tile.group}`;
+                tileDiv.className = `tile ${tile.type}`; 
                 tileDiv.id = `tile-${index}`;
                 tileDiv.style.gridRow = gridPositions[index].r;
                 tileDiv.style.gridColumn = gridPositions[index].c;
@@ -481,39 +554,10 @@
         }
 
         function shuffleAndResetGame() {
-            if (confirm("確定要將所有隊伍重設回起點，並且「重新洗牌」關卡嗎？")) {
-                
+            if (confirm("確定要將所有隊伍重設回起點，並且重新從題庫「隨機抽題」洗牌嗎？")) {
                 activeTeams.forEach(team => { teamPositions[team] = 0; });
                 selectedTeamToMove = null;
-
-                let startTile = mapData[0];
-                let tilesToShuffle = mapData.slice(1);
-                
-                let isValid = false;
-                let maxRetries = 1000; 
-
-                while (!isValid && maxRetries > 0) {
-                    for (let i = tilesToShuffle.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [tilesToShuffle[i], tilesToShuffle[j]] = [tilesToShuffle[j], tilesToShuffle[i]];
-                    }
-
-                    isValid = true;
-                    for (let i = 0; i < tilesToShuffle.length - 1; i++) {
-                        if (tilesToShuffle[i].group === tilesToShuffle[i + 1].group) {
-                            isValid = false;
-                            break;
-                        }
-                    }
-                    maxRetries--;
-                }
-
-                tilesToShuffle.forEach((tile, idx) => {
-                    tile.num = (idx + 1).toString().padStart(2, '0');
-                });
-
-                mapData = [startTile, ...tilesToShuffle];
-
+                generateRandomBoard(); 
                 renderBoard();
                 updateTokens();
                 
@@ -558,25 +602,16 @@
                 if (container) {
                     let token = document.createElement('div');
                     token.className = `token ${teamClasses[team]}`;
-                    
-                    if (selectedTeamToMove === team) {
-                        token.classList.add('selected-token');
-                    }
-
+                    if (selectedTeamToMove === team) token.classList.add('selected-token');
                     token.innerText = teamShortNames[team];
                     token.setAttribute('draggable', 'true');
                     token.setAttribute('ondragstart', `handleDragStart(event, '${team}')`);
                     
                     token.onclick = (e) => {
                         e.stopPropagation(); 
-                        if (selectedTeamToMove === team) {
-                            selectedTeamToMove = null;
-                        } else {
-                            selectedTeamToMove = team;
-                        }
+                        selectedTeamToMove = (selectedTeamToMove === team) ? null : team;
                         updateTokens(); 
                     };
-
                     container.appendChild(token);
                 }
             });
@@ -589,13 +624,7 @@
             const text = document.getElementById('challengeText');
 
             title.innerText = `【 ${teamName} 】 踩到了 第 ${tile.num} 格：${tile.name}`;
-
-            // 若這一格有題庫池 (pool)，就隨機抽一題；否則顯示預設說明 (desc)
-            if (Array.isArray(tile.pool) && tile.pool.length > 0) {
-                text.innerHTML = tile.pool[Math.floor(Math.random() * tile.pool.length)];
-            } else {
-                text.innerHTML = tile.desc;
-            }
+            text.innerHTML = tile.desc;
 
             if (tile.type === 'destiny') {
                 box.style.background = '#fffafb';
