@@ -1,0 +1,1 @@
+wedsite:https://sumo0711.github.io/idiom_game/
